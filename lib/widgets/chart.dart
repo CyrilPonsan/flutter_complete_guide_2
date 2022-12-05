@@ -14,25 +14,28 @@ class Chart extends StatelessWidget {
       for (final tx in recentTransactions) {
         if (tx.date.day == weekDay.day &&
             tx.date.month == weekDay.month &&
-            tx.date.month == weekDay.month) {
+            tx.date.year == weekDay.year) {
           totalSum += tx.amount;
         }
       }
 
-      print(DateFormat.E(weekDay));
+      print(DateFormat.E().format(weekDay));
       print(totalSum);
 
-      return {'day': DateFormat.E(weekDay), 'amount': totalSum};
+      return {'day': DateFormat.E().format(weekDay), 'amount': totalSum};
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(groupedTransactionValues);
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(20),
       child: Row(
-        children: [],
+        children: groupedTransactionValues.map((data) {
+          return Text("${data['day']}: ${data['amount']}");
+        }).toList(),
       ),
     );
   }
