@@ -34,43 +34,35 @@ class TransactionList extends StatelessWidget {
               itemCount: transactions.length,
               itemBuilder: (ctx, index) {
                 return Card(
-                    child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 15),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: Container(
+                      height: 60,
+                      width: 60,
                       decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 2)),
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "${transactions[index].amount.toStringAsFixed(2)} €",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.primary),
+                          color: Theme.of(context).colorScheme.secondary,
+                          shape: BoxShape.circle),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: FittedBox(
+                            child: Text(
+                          "${transactions[index].amount.toStringAsFixed(2)} €",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )),
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          transactions[index].title,
-                          style: Theme.of(context).appBarTheme.titleTextStyle,
-                        ),
-                        Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(transactions[index].date),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.grey),
-                        )
-                      ],
-                    )
-                  ],
-                ));
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                    ),
+                    subtitle: Text(
+                        DateFormat.yMMMd().format(transactions[index].date)),
+                    trailing: IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.delete)),
+                  ),
+                );
               },
             ),
     );
