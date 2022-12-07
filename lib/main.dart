@@ -84,6 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,11 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: Column(
-        children: [
-          Chart(recentTransactions: _recentTransactions),
-          TransactionList(transactions: _userTransactions)
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Chart(recentTransactions: _recentTransactions),
+            TransactionList(
+              transactions: _userTransactions,
+              deleteTransaction: _deleteTransaction,
+            )
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
