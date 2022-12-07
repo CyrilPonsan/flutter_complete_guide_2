@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'widgets/chart.dart';
 import 'widgets/transaction_list.dart';
@@ -6,6 +7,9 @@ import 'widgets/new_transaction.dart';
 import 'models/transaction.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 
@@ -39,14 +43,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    /*
     Transaction(
         id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
     Transaction(
         id: 't2',
         title: 'Iron Maiden Album',
         amount: 29.95,
-        date: DateTime.now()),*/
+        date: DateTime.now()),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -106,11 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Chart(recentTransactions: _recentTransactions),
+            SizedBox(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    .3,
+                child: Chart(recentTransactions: _recentTransactions)),
             SizedBox(
               height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height) *
-                  .6,
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  .7,
               child: TransactionList(
                 transactions: _userTransactions,
                 deleteTransaction: _deleteTransaction,
