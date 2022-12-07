@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'widgets/chart.dart';
 import 'widgets/transaction_list.dart';
@@ -146,14 +145,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       .3,
                   child: Chart(recentTransactions: _recentTransactions)),
             if (!isLandscape) txListWidget,
-            _showChart
-                ? SizedBox(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        .7,
-                    child: Chart(recentTransactions: _recentTransactions))
-                : txListWidget
+            if (isLandscape)
+              _showChart
+                  ? SizedBox(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          .7,
+                      child: Chart(recentTransactions: _recentTransactions))
+                  : txListWidget
           ],
         ),
       ),
