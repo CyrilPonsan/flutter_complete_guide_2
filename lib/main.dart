@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
-              .copyWith(secondary: Colors.amber),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown)
+              .copyWith(secondary: Colors.green),
           fontFamily: 'Quicksand',
           appBarTheme: const AppBarTheme(
               titleTextStyle:
@@ -97,11 +97,49 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final appBar = AppBar(
+  List<Widget> _buildLandscape(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Show Chart'),
+          Switch.adaptive(
+              value: _showChart,
+              onChanged: (value) {
+                setState(() {
+                  _showChart = value;
+                });
+              })
+        ],
+      ),
+      _showChart
+          ? SizedBox(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  .7,
+              child: Chart(recentTransactions: _recentTransactions))
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPortrait(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return [
+      SizedBox(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            .3,
+        child: Chart(recentTransactions: _recentTransactions),
+      ),
+      txListWidget
+    ];
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
       title: Text(widget.title),
       actions: [
         IconButton(
@@ -109,6 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.add))
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final appBar = _buildAppBar();
     final txListWidget = SizedBox(
       height: (mediaQuery.size.height -
               appBar.preferredSize.height -
@@ -122,37 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final pageBody = SingleChildScrollView(
       child: Column(
         children: [
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Show Chart'),
-                Switch.adaptive(
-                    value: _showChart,
-                    onChanged: (value) {
-                      setState(() {
-                        _showChart = value;
-                      });
-                    })
-              ],
-            ),
-          if (!isLandscape)
-            SizedBox(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    .3,
-                child: Chart(recentTransactions: _recentTransactions)),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            _showChart
-                ? SizedBox(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        .7,
-                    child: Chart(recentTransactions: _recentTransactions))
-                : txListWidget
+          if (isLandscape) ..._buildLandscape(mediaQuery, appBar, txListWidget),
+          if (!isLandscape) ..._buildPortrait(mediaQuery, appBar, txListWidget),
         ],
       ),
     );
